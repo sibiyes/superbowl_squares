@@ -35,7 +35,12 @@
 			{% for r in range(10) %}
 				<tr>
 					{% for d in range(11) %}
-						<td class="cell">
+						{% if index_a == [r, d-1] or index_b == [r, d-1] %}
+							{% set cell_color = "blue" %}
+						{% else%}
+							{% set cell_color = "white" %}
+						{% endif %}
+						<td class="cell" style="background-color: {{ cell_color }}">
 							{%if d == 0 %}
 								<b>Eagles</b>
 								{% if numbers %}
@@ -53,13 +58,7 @@
 								{% set ds = di | string %}
 								{% set sq = rs + ds %}
 								{% if squares.get(sq) %}
-									{{ squares.get(sq) }}					
-								{% else %}
-								<a href="/claim?s={{ sq }}">
-									<div style="height:100%; width:100%">
-										<i>claim</i>
-									</div>	
-								</a>
+									{{ squares.get(sq) }}
 								{% endif %}
 								<span class="cellindex">{{ r }}{{ d-1 }}</span>
 							{% endif %}
@@ -68,14 +67,35 @@
 				</tr>
 			{% endfor %}
 		</table>
+		<br>
 		<div>
-			<b>Rules: </b>
-			<p> - One square costs $10</p>
-			<p> - winner of I quarter get $200</p>
-			<p> - winner of II quarter get $200</p>
-			<p> - winner of III quarter get $200</p>
-			<p> - winner of IV quarter get $400</p>
-			<p> - In case of overtime the score at the end of game is the one that counts</p>
+			{% if action == "input" %}
+				<form class=form action="/squares_swap" method="post">
+					{{ swap_form.csrf_token }}
+					<p>
+					<label>Square A: </label>
+					{{ swap_form.square_a }}
+					{% if swap_form.square_a.errors %}
+						<span style="color: red;">{{ swap_form.square_a.errors }}</span>
+					{% endif %}
+					</p>
+					<p>
+					<label>Square B: </label>
+					{{ swap_form.square_b }}
+					{% if swap_form.square_b.errors %}
+						<span style="color: red;">{{ swap_form.square_b.errors }}</span>
+					{% endif %}
+					</p>
+					<input type="submit" name="submit" value="swap">
+				</form>
+			{% endif %}
+			{% if action == "confirm" %}
+				<form class=form action="/squares_swap" method="post">
+					{{ swap_confirm_form.square_a }}
+					{{ swap_confirm_form.square_b }}
+					<input type="submit" name="submit" value="confirm">
+				</form>
+			{% endif %}
 		</div>
 	</div>
 </body>

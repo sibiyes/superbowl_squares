@@ -4,6 +4,9 @@ import simplejson as json
 script_dir = os.path.dirname(os.path.abspath(__file__))
 squares_dir = os.path.abspath(script_dir + '/.squares')
 
+if not os.path.exists(squares_dir):
+	os.makedirs(squares_dir)
+
 def read_square_json(file_path):
 	fp = open(file_path, 'r')
 	value = json.load(fp)
@@ -17,9 +20,6 @@ def write_square_json(file_path, value):
 	fp.close()
 
 def claim_square(square, name):
-	if not os.path.exists(squares_dir):
-		os.makedirs(squares_dir)
-
 	file_path = squares_dir + '/' + square + '.json'
 	value = {
 				'square': square, 
@@ -63,7 +63,25 @@ def validate_square(square):
 
 	write_square_json(file_path, value)
 
+def swap_squares(square_a, square_b):
+	square_a_val = read_square_json(squares_dir + '/' + square_a + '.json')
+	square_b_val = read_square_json(squares_dir + '/' + square_b + '.json')
+
+	square_a_val['square'] = square_b
+	square_b_val['square'] = square_a
+
+	write_square_json(squares_dir + '/' + square_a + '.json', square_b_val)
+	write_square_json(squares_dir + '/' + square_b + '.json', square_a_val)
+
+def get_numbers():
+	numbers = {}
+	numbers_file = script_dir + '/numbers.json'
+	if (os.path.exists(numbers_file)) & (os.path.isfile(numbers_file)):
+		fp = open(numbers_file, 'r')
+		numbers = json.load(fp)
+		fp.close()
+	
+	return numbers
 
 if __name__ == '__main__':
-	#claim_square('22', 'sibi')
 	get_squares()

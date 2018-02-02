@@ -14,8 +14,12 @@
 	<div>
 	<div>
 		<form class="form" action="/claim" method="post">
+			{{ form.csrf_token }}
 			<label>Name: </label>
 			{{ form.name }}
+			{% if form.name.errors %}
+				<span style="color: red;">{{ form.name.errors }}</span>
+			{% endif %}
 			{{ form.square }}
 			<input type="submit" name="submit" value="claim">
 		</form>

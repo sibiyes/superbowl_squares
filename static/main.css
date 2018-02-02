@@ -11,8 +11,20 @@ th {
 }
 
 td {
-
 	width: 150px;
 	height: 50;
+	text-align:center;
+}
+
+.cell {
+	position: relative;
+}
+
+.cellindex {
+	color: orange;
+	position: absolute;
+    bottom: 0;
+    right: 0;
+    font-size: 10pt;    
 }
 
